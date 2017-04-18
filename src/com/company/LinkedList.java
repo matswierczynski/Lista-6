@@ -1,7 +1,5 @@
 package com.company;
 
-import static com.company.LinkedListInterface.INSERT.ADD;
-import static com.company.LinkedListInterface.INSERT.REPLACE;
 
 /**
  * Created by Mati on 2017-04-17.
@@ -10,22 +8,24 @@ public class LinkedList<E> implements LinkedListInterface<E> {
     private final Element _headAndTail = new Element();
     private final int size;
     private final Matrix matrix;
-    private enum INSERT {REPLACE, ADD}
 
-    public LinkedList(){
-        matrix = new Matrix();
-        size=matrix.getMatrix().length;
+    public LinkedList(int _size){
+        size=_size;
+        matrix = new Matrix(size);
         createEmpty();
         createLinkedMatrix();
 
     }
 
-    public LinkedList(LinkedList<E> lList){
-        matrix=lList.matrix;
-        size=matrix.getMatrix().length;
+    public LinkedList(LinkedList<E> lList, LinkedList<E> lList1){
+        matrix=null;
+        size=lList.matrix.getMatrix().length;
         createEmpty();
-        createLinkedMatrix();
+        for(int i=1;i<=size;i++)
+            for(int k=1;k<=size;k++)
+                set(i,k,lList.get(i,k)+lList1.get(i,k));
     }
+
 
 
     private void createEmpty(){
@@ -66,7 +66,7 @@ public class LinkedList<E> implements LinkedListInterface<E> {
 
 
     @Override
-    public void set(int row, int col, int o, LinkedListInterface.INSERT insert)
+    public void set(int row, int col, int o)
             throws IndexOutOfBoundsException {
         if (row > size || col > size || row < 1 || col < 1) throw new IndexOutOfBoundsException();
         if ( o != 0) {
@@ -82,10 +82,8 @@ public class LinkedList<E> implements LinkedListInterface<E> {
                     _row = _row.getNextRow();
 
                 if (_row.getNextRow().getRowNr() == row) {
-                    if (insert==REPLACE)
                     _row.getNextRow().setKey(o);
-                    else
-                        _row.getNextRow().setKey(_row.getNextRow().getKey()+o);
+
                 }
                 else {
                     _row.attachInRow(newElement);
@@ -108,27 +106,27 @@ public class LinkedList<E> implements LinkedListInterface<E> {
         }
     }
 
-    @Override
-    public void add(LinkedList<E> linlist) {
-        Element curRow;
-        Element curCol;
 
-        curRow=linlist._headAndTail;
-        while (curRow.getNextRow() != null) {
-            curRow = curRow.getNextRow();
-            curCol = curRow;
-            while (curCol.getNextCol() != null) {
-                curCol = curCol.getNextCol();
-                set(curCol.getRowNr(),curCol.getColNr(),curCol.getKey(), ADD);
+    @Override
+    public int get(int row, int col) throws IndexOutOfBoundsException {
+
+        if (row > size || col > size || row < 1 || col < 1) throw new IndexOutOfBoundsException();
+
+            Element _row = _headAndTail;
+
+            while (_row.getNextCol() != null && _row.getColNr() != col)  //odpowiednia kolumna w wierszu 0
+                _row = _row.getNextCol();
+
+            if (_row.getNextRow() != null) {
+                while (_row.getNextRow() != null && _row.getRowNr() != row)
+                    _row = _row.getNextRow();
             }
+
+            if (_row.getColNr()==col && _row.getRowNr() == row)
+                return _row.getKey();
+            else return 0;
+
         }
-
-    }
-
-    @Override
-    public E get(int row, int col) throws IndexOutOfBoundsException {
-        return null;
-    }
 
     public void show() {
         Element curRow=_headAndTail;
@@ -144,10 +142,16 @@ public class LinkedList<E> implements LinkedListInterface<E> {
         }
     }
 
-    @Override
-    public E remove(int row, int col) throws IndexOutOfBoundsException {
-        return null;
-    }
+    public void showFormatted() {
+        System.out.println("-------------------------");
+        for(int i=1;i<=size;i++) {
+            for (int k = 1; k <= size; k++)
+                System.out.print(" " + get(i, k));
+            System.out.println();
+        }
+        System.out.println("-------------------------");
+        }
+
 
 
 
@@ -155,7 +159,19 @@ public class LinkedList<E> implements LinkedListInterface<E> {
         int [][] _matrix=matrix.getMatrix();
         for(int i=1;i<=_matrix.length;i++)
             for(int k=1;k<=_matrix[i-1].length;k++)
-                set(i,k,_matrix[i-1][k-1],REPLACE);
+                set(i,k,_matrix[i-1][k-1]);
+    }
+
+    public static int collectSize(){
+        int size=0;
+        int [] _size;
+        while(size<=0){
+            System.out.println("Podaj poprawną wielkość macierzy");
+            _size=Matrix.loadData(1);
+            size=_size[0];
+        }
+
+        return size;
     }
 
 
@@ -232,6 +248,7 @@ public class LinkedList<E> implements LinkedListInterface<E> {
             return key;
         }
 
+        @Override
         public String toString(){ return Integer.toString(key);}
 
 

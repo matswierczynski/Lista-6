@@ -8,32 +8,14 @@ import java.util.Scanner;
 public class Matrix {
     private int [][] matrix;
 
-    Matrix (){
-        int size=collectSize();
-        matrix=collectMatrix(size);
-
-
-    }
-
     Matrix (int size){
         matrix=collectMatrix(size);
     }
 
-    private int collectSize(){
-        int size=0;
-        int [] _size;
-        while(size<=0){
-            print("Podaj poprawną wielkość macierzy");
-                _size=loadData(1);
-                size=_size[0];
-            }
 
-        return size;
-    }
 
     private int [][] collectMatrix(int size){
         int [][] matrix = new int[size][size];
-        int counter=0;
         for (int i=0;i<size;i++)
         {
             print("Podaj "+i+" wiersz macierzy");
@@ -43,10 +25,9 @@ public class Matrix {
         return matrix;
     }
 
-    private int [] loadData(int dataSize) {
+    public static int [] loadData(int dataSize) {
         int[] data = new int[dataSize];
         String string;
-        int size = 0;
         int dataLoop = 0;
             Scanner scan = new Scanner(System.in);
             string = scan.nextLine();
