@@ -9,6 +9,12 @@ public class LinkedList<E> implements LinkedListInterface<E> {
     private final int size;
     private final Matrix matrix;
 
+    public LinkedList(LinkedList<E> lList)
+    {
+        size = lList.getSize();
+        matrix=null;
+        createEmpty();
+    }
     public LinkedList(int _size){
         size=_size;
         matrix = new Matrix(size);
@@ -162,16 +168,25 @@ public class LinkedList<E> implements LinkedListInterface<E> {
                 set(i,k,_matrix[i-1][k-1]);
     }
 
-    public static int collectSize(){
+    public static int collectSize(String message){
         int size=0;
         int [] _size;
         while(size<=0){
-            System.out.println("Podaj poprawną wielkość macierzy");
+            System.out.println(message);
             _size=Matrix.loadData(1);
             size=_size[0];
         }
 
         return size;
+    }
+
+    public static LinkedList ScalarMultiplication(LinkedList<Integer> lList){
+        int scalar = collectSize("Podaj mnożnik");
+         LinkedList<Integer> multipledList = new LinkedList<>(lList);
+        for(int i=1;i<=lList.getSize();i++)
+            for(int k=1;k<=lList.getSize();k++)
+                multipledList.set(i,k,lList.get(i,k)*scalar);
+        return multipledList;
     }
 
 
