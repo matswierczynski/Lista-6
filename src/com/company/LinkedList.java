@@ -265,6 +265,7 @@ public class LinkedList<E> implements LinkedListInterface<E> {
 
         @Override
         public String toString(){ return Integer.toString(key);}
+        //gdzie jest ZZbyszek?????
 
 
 
